@@ -35,12 +35,9 @@ https://github.com/ZJU-FAST-Lab/EGO-Planner-v2/blob/main/swarm-playground/%5BREA
 
 * Nav2 Naigation package etc.
 
-* Study d435i rtabmap example launch file and skyhub_server simulation [X],
-
 * Gazebo .sdf description [.+] etc. and try to match them: rtabmap example requires stereo camera and it remaps from the infrared cameras of d435i (a laser projects a grid pattern)
 
 * --> Done, but there are things which I can't do yet as additional topics are required such as camera_info etc. I did what I could so far. [2.10.2023]
-
 
 /opt/ros/humble/share/rtabmap_examples/launch/simulated_color.launch.py
 ros2 launch rtabmap_examples simulated_color.launch.py
