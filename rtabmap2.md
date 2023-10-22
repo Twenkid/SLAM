@@ -25,7 +25,7 @@ ros2 launch rtabmap_launch rtabmap.launch.py visual_odometry:=true frame_id:=bas
 
 Drone model:
 
-https://github.com/ID-Robots/skyhub_server/blob/main/ardupilot_gazebo_models/iris_with_standoffs/model.sdf
+$HOME/ardupilot_gazebo/models/iris_with_standoffs/model.sdf
 
 base_link
 ```
@@ -146,7 +146,8 @@ ros2 topic list
 /tf_static
 /user_data_async
 /voxel_cloud
-skyhub@skyhub-serv
+
+
 /rtabmap/cloud_ground
 
 /rtabmap/cloud_map
