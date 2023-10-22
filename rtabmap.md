@@ -5,7 +5,13 @@
 
 ### Researching Rtabmap and it's deployment and application in simulations, mapping and robots 10.2023
 
-Continues in rtabmap2.md
+Continues in rtabmap2.md etc.
+
+* Useful links 
+ROS1: http://wiki.ros.org/rtabmap_ros/Tutorials/StereoOutdoorMapping
+
+
+
 
 * Running an example with turtlebotsim3 - first in WSL2, then in a HyperV VM
 * Mapping with Rtabmap with depth cameras:
