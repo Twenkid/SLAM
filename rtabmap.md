@@ -1,4 +1,11 @@
 # RTAB-map : SLAM, Navigation, ... ROS2
+## Part I
+
+### Author: Todor Arnaudov - Twenkid
+
+### Researching Rtabmap and it's deployment and application in simulations, mapping and robots 10.2023
+
+Continues in rtabmap2.md
 
 * Running an example with turtlebotsim3 - first in WSL2, then in a HyperV VM
 * Mapping with Rtabmap with depth cameras:
@@ -493,4 +500,206 @@ urdf_file_name : turtlebot3_waffle.urdf
 ```
 
 With the editor of Gazebo, left panel World -- Models -- added House ... Toolbar, The Cross-tool (Translate tool), next to the arrow, on the right) to Translate the turtle to another room which will allow to walk more.
+
+![image](https://github.com/Twenkid/SLAM/assets/23367640/df0d5285-0501-4d68-a80a-8fd52a57d39c)
+
+Terminal 4
+In the folder of rtabmap
+
+In my case:
+
+cd ~/ros2/rtabmap_ros
+
+ros2 launch rtabmap_launch rtabmap.launch.py visual_odometry:=false frame_id:=base_footprint subscribe_scan:=true depth:=false approx_sync:=true odom_topic:=/odom scan_topic:=/scan qos:=2 args:="-d --RGBD/NeighborLinkRefining true --Reg/Strategy 1" use_sim_time:=true rviz:=true
+
+![image](https://github.com/Twenkid/SLAM/assets/23367640/a568f473-2e54-4eb1-911a-6d532959f22f)
+
+
+This runs Rviz visualisation with a rutle rendered strangely with vectors on a map that will be created by scanning.
+
+![image](https://github.com/Twenkid/SLAM/assets/23367640/0bf35412-27ea-45cf-abff-077121ef99b8)
+
+
+On Displays left panel, see:
+```
+MapCloud, there is a Topic: /rtabmap/mapData
+MapGraph: /rtabmap/mapGraph
+Map:
+Topic: /rtabmap/map
+Update Topic: /rtabmap/map_updates
+Odom(etry) Local Map: /rtabmap/odom_local_map
+Camera Cloud: /voxel_cloud
+```
+
+(It is offeset perhaps of the translations which we did, this example is with a modified world)
+
+Go to the Keyboard teleop console and increase the linear velocity, adjust angular one etc. W: forward speed+ X: backward speed+ A, D: angular speed ... S: Stop to 0
+
+![image](https://github.com/Twenkid/SLAM/assets/23367640/605f6077-d242-4974-8d81-e97561e69be7)
+
+Well, it seems the turtle has gone wild!
+
+![image](https://github.com/Twenkid/SLAM/assets/23367640/8b68a764-5884-44d1-b068-0489175328bd)
+
+
+Let's move it in:
+
+![image](https://github.com/Twenkid/SLAM/assets/23367640/fad29e54-d7e3-486f-b279-ab5ee4cf9ffc)
+
+
+![image](https://github.com/Twenkid/SLAM/assets/23367640/707866f5-b328-4244-a2cf-30beb22108bd)
+
+
+//TurtleBot3 has three models, burger, waffle, and waffle_pi, so you have to set which model to use before using.
+
+## Tutorials
+
+https://github.com/introlab/rtabmap/wiki/Tutorials
+
+### Paths
+The map is stored there:
+
+```
+ls ~/.ros/
+log  rosdep  rtabmap.db
+
+rtabmap-databaseViewer ~/.ros/rtabmap.db
+```
+
+![image](https://github.com/Twenkid/SLAM/assets/23367640/3bbf0b0a-2512-4fe1-8880-92a7b3355628)
+
+![image](https://github.com/Twenkid/SLAM/assets/23367640/57f3138f-1ab4-489c-9a32-24091fb7946c)
+
+![image](https://github.com/Twenkid/SLAM/assets/23367640/bc513489-a887-436b-8110-bb081093be3e)
+
+
+## Realsense camera modules
+
+In order to use visual odometry we have to run depth camera nodes. As we have real D435i and T265 cameras, but they are not available for development right now.
+
+https://github.com/IntelRealSense/realsense-ros
+
+Installation of Realsense drivers: https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md#installing-the-packages
+
+So far we were working in WSL2, but it seems that we can't compile kernel modules with it as it's paravirtualization. Real Linux or full virtualization will be needed.
+We need only a simulation for now, will it work just with the packages?
+sudo apt install ros-humble-realsense2-*
+
+```
+~/ros2/rtabmap_ros$ sudo apt install ros-humble-realsense2-*
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Note, selecting 'ros-humble-realsense2-camera-msgs' for glob 'ros-humble-realsense2-*'
+Note, selecting 'ros-humble-realsense2-camera' for glob 'ros-humble-realsense2-*'
+Note, selecting 'ros-humble-realsense2-description' for glob 'ros-humble-realsense2-*'
+Note, selecting 'ros-humble-realsense2-camera-msgs-dbgsym' for glob 'ros-humble-realsense2-*'
+Note, selecting 'ros-humble-realsense2-camera-dbgsym' for glob 'ros-humble-realsense2-*'
+ros-humble-realsense2-camera-msgs is already the newest version (4.54.1-1jammy.20230721.201856).
+ros-humble-realsense2-camera-msgs set to manually installed.
+The following packages were automatically installed and are no longer required:
+  gz-plugin2-cli gz-transport12-cli libcap-dev libev-dev libev4 libgz-cmake3-dev libgz-common5 libgz-common5-av
+  libgz-common5-av-dev libgz-common5-core-dev libgz-common5-dev libgz-common5-events libgz-common5-events-dev
+  libgz-common5-geospatial libgz-common5-geospatial-dev libgz-common5-graphics libgz-common5-graphics-dev
+  libgz-common5-io libgz-common5-io-dev libgz-common5-profiler libgz-common5-profiler-dev libgz-common5-testing
+  libgz-common5-testing-dev libgz-gui7 libgz-math7 libgz-math7-dev libgz-math7-eigen3-dev libgz-msgs9 libgz-msgs9-dev
+  libgz-physics6 libgz-physics6-bullet libgz-physics6-core-dev libgz-physics6-dartsim libgz-physics6-heightmap-dev
+  libgz-physics6-mesh-dev libgz-physics6-tpe libgz-physics6-tpelib libgz-physics6-tpelib-dev libgz-plugin2
+  libgz-plugin2-dev libgz-rendering7 libgz-rendering7-core-dev libgz-rendering7-dev libgz-rendering7-ogre1
+  libgz-rendering7-ogre1-dev libgz-rendering7-ogre2 libgz-rendering7-ogre2-dev libgz-sensors7
+  libgz-sensors7-air-pressure libgz-sensors7-air-speed libgz-sensors7-altimeter libgz-sensors7-boundingbox-camera
+  libgz-sensors7-camera libgz-sensors7-depth-camera libgz-sensors7-force-torque libgz-sensors7-gpu-lidar
+  libgz-sensors7-imu libgz-sensors7-lidar libgz-sensors7-logical-camera libgz-sensors7-magnetometer
+  libgz-sensors7-navsat libgz-sensors7-rendering libgz-sensors7-rgbd-camera libgz-sensors7-segmentation-camera
+  libgz-sensors7-thermal-camera libgz-sensors7-wide-angle-camera libgz-transport12 libgz-transport12-log
+  libgz-transport12-parameters libgz-utils2 libgz-utils2-cli-dev libgz-utils2-dev libogre-next-2.3-dev
+  libogre-next-2.3.0 libsdformat13 libuv1-dev libwebsockets-dev libwebsockets16 python3-gz-math7 python3-pybind11
+  sdformat13-sdf
+Use 'sudo apt autoremove' to remove them.
+The following NEW packages will be installed:
+  ros-humble-realsense2-camera-dbgsym ros-humble-realsense2-camera-msgs-dbgsym ros-humble-realsense2-description
+  ros-humble-xacro
+The following packages will be upgraded:
+  ros-humble-realsense2-camera
+1 upgraded, 4 newly installed, 0 to remove and 344 not upgraded.
+1 not fully installed or removed.
+Need to get 21.3 MB of archives.
+After this operation, 84.1 MB of additional disk space will be used.
+Get:1 http://packages.ros.org/ros2/ubuntu jammy/main amd64 ros-humble-realsense2-camera amd64 4.54.1-1jammy.20230822.190141 [407 kB]
+Get:2 http://packages.ros.org/ros2/ubuntu jammy/main amd64 ros-humble-realsense2-camera-dbgsym amd64 4.54.1-1jammy.20230822.190141 [9369 kB]
+Get:3 http://packages.ros.org/ros2/ubuntu jammy/main amd64 ros-humble-realsense2-camera-msgs-dbgsym amd64 4.54.1-1jammy.20230721.201856 [403 kB]
+Get:4 http://packages.ros.org/ros2/ubuntu jammy/main amd64 ros-humble-xacro amd64 2.0.8-1jammy.20230718.195755 [36.8 kB]
+Get:5 http://packages.ros.org/ros2/ubuntu jammy/main amd64 ros-humble-realsense2-description amd64 4.54.1-1jammy.20230822.184132 [11.1 MB]
+Fetched 21.3 MB in 40s (528 kB/s)
+dpkg: warning: files list file for package 'libignition-common3-graphics-dev:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-common3-profiler3:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-plugin-dev:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libsdformat12:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-common3-core-dev:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libsdformat12-dev:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-msgs5-dev:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-msgs5-5:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-plugin:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-transport8-8:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-common3-av-dev:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-common3-3:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-common3-dev:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-common3-events3:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-common3-av3:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-transport8-dev:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-fuel-tools4-4:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-common3-graphics3:amd64' missing; assuming package has no files currently installed
+dpkg: warning: files list file for package 'libignition-fuel-tools4-dev:amd64' missing; assuming package has no files currently installed
+(Reading database ... 241089 files and directories currently installed.)
+Preparing to unpack .../ros-humble-realsense2-camera_4.54.1-1jammy.20230822.190141_amd64.deb ...
+Unpacking ros-humble-realsense2-camera (4.54.1-1jammy.20230822.190141) over (4.54.1-1jammy.20230814.155140) ...
+Selecting previously unselected package ros-humble-realsense2-camera-dbgsym.
+Preparing to unpack .../ros-humble-realsense2-camera-dbgsym_4.54.1-1jammy.20230822.190141_amd64.deb ...
+Unpacking ros-humble-realsense2-camera-dbgsym (4.54.1-1jammy.20230822.190141) ...
+Selecting previously unselected package ros-humble-realsense2-camera-msgs-dbgsym.
+Preparing to unpack .../ros-humble-realsense2-camera-msgs-dbgsym_4.54.1-1jammy.20230721.201856_amd64.deb ...
+Unpacking ros-humble-realsense2-camera-msgs-dbgsym (4.54.1-1jammy.20230721.201856) ...
+Selecting previously unselected package ros-humble-xacro.
+Preparing to unpack .../ros-humble-xacro_2.0.8-1jammy.20230718.195755_amd64.deb ...
+Unpacking ros-humble-xacro (2.0.8-1jammy.20230718.195755) ...
+Selecting previously unselected package ros-humble-realsense2-description.
+Preparing to unpack .../ros-humble-realsense2-description_4.54.1-1jammy.20230822.184132_amd64.deb ...
+Unpacking ros-humble-realsense2-description (4.54.1-1jammy.20230822.184132) ...
+Setting up ros-humble-realsense2-camera-msgs-dbgsym (4.54.1-1jammy.20230721.201856) ...
+Setting up ros-humble-realsense2-camera (4.54.1-1jammy.20230822.190141) ...
+Setting up ros-humble-xacro (2.0.8-1jammy.20230718.195755) ...
+Setting up librealsense2-dkms (1.3.22-0ubuntu1) ...
+Removing old librealsense2-dkms-1.3.22 DKMS files...
+Deleting module librealsense2-dkms-1.3.22 completely from the DKMS tree.
+Loading new librealsense2-dkms-1.3.22 DKMS files...
+It is likely that 5.15.90.1-microsoft-standard-WSL2 belongs to a chroot's host
+Building for 5.15.0-83-generic
+Building initial module for 5.15.0-83-generic
+ERROR: Cannot create report: [Errno 17] File exists: '/var/crash/librealsense2-dkms.0.crash'
+Error! Application of patch 92-realsense-hid-5.15.patch failed.
+Check /var/lib/dkms/librealsense2-dkms/1.3.22/build/ for more information.
+dpkg: error processing package librealsense2-dkms (--configure):
+ installed librealsense2-dkms package post-installation script subprocess returned error exit status 6
+Setting up ros-humble-realsense2-camera-dbgsym (4.54.1-1jammy.20230822.190141) ...
+Setting up ros-humble-realsense2-description (4.54.1-1jammy.20230822.184132) ...
+Errors were encountered while processing:
+ librealsense2-dkms
+E: Sub-process /usr/bin/dpkg returned an error code (1)
+```
+
+There are errors with dkms - we can work with the kernel properly with WSL2.
+
+```
+sudo apt install ros-humble-realsense2-*
+
+ros2 launch realsense2_camera rs_launch.py camera_namespace:=robot1 camera_name:=D455_1
+[INFO] [launch]: All log files can be found below /home/tosh/.ros/log/2023-09-12-23-35-39-125556-DESKTOP-LQSDBBS-52709
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [realsense2_camera_node-1]: process started with pid [52711]
+[realsense2_camera_node-1] [INFO] [1694550939.368209783] [D455_1.D455_1]: RealSense ROS v4.54.1
+[realsense2_camera_node-1] [INFO] [1694550939.368389483] [D455_1.D455_1]: Built with LibRealSense v2.54.1
+[realsense2_camera_node-1] [INFO] [1694550939.368432483] [D455_1.D455_1]: Running with LibRealSense v2.54.1
+[realsense2_camera_node-1] [WARN] [1694550939.371276983] [D455_1.D455_1]: No RealSense devices were found!
+[realsense2_camera_node-1] [WARN] [1694550945.373452719] [D455_1.D455_1]: No RealSense devices were found!
+```
 
