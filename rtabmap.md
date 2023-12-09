@@ -289,7 +289,7 @@ average rate: 30.649
 	min: 0.017s max: 0.110s std dev: 0.00999s window: 156
 average rate: 30.338
 	min: 0.017s max: 0.110s std dev: 0.01078s window: 185
-^Cskyhub@skyhub-server:/opt/ros/humble/lib$ ros2 topic hz /front_camera 
+user:/opt/ros/humble/lib$ ros2 topic hz /front_camera 
 2023-10-02 23:57:15.271 [RTPS_TRANSPORT_SHM Error] Failed init_port fastrtps_port7435: open_and_lock_file failed -> Function open_port_internal
 2023-10-02 23:57:15.271 [RTPS_TRANSPORT_SHM Error] Failed init_port fastrtps_port7437: open_and_lock_file failed -> Function open_port_internal
 2023-10-02 23:57:15.271 [RTPS_TRANSPORT_SHM Error] Failed init_port fastrtps_port7439: open_and_lock_file failed -> Function open_port_internal
